@@ -88,7 +88,7 @@ enum chips { it87, it8712, it8716, it8718, it8720, it8721, it8728, it8732,
 	     it8736, it8738,
 	     it8771, it8772, it8781, it8782, it8783, it8786, it8790,
 	     it8792, it8603, it8606, it8607, it8613, it8620, it8622, it8625,
-	     it8628, it8655, it8665, it8686 };
+	     it8628, it8655, it8665, it8686, it8689 };
 
 static unsigned short force_id;
 module_param(force_id, ushort, 0000);
@@ -204,6 +204,7 @@ static inline void superio_exit(int ioreg, bool doexit)
 #define IT8655E_DEVID 0x8655
 #define IT8665E_DEVID 0x8665
 #define IT8686E_DEVID 0x8686
+#define IT8689E_DEVID 0x8689
 
 /* Logical device 4 (Environmental Monitor) registers */
 #define IT87_ACT_REG		0x30
@@ -725,6 +726,18 @@ static const struct it87_devices it87_devices[] = {
 	[it8686] = {
 		.name = "it8686",
 		.model = "IT8686E",
+		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
+		  | FEAT_SIX_FANS | FEAT_NEW_TEMPMAP
+		  | FEAT_IN7_INTERNAL | FEAT_SIX_PWM | FEAT_PWM_FREQ2
+		  | FEAT_SIX_TEMP | FEAT_BANK_SEL | FEAT_SCALING | FEAT_AVCC3,
+		.num_temp_limit = 6,
+		.num_temp_offset = 6,
+		.num_temp_map = 7,
+		.smbus_bitmap = BIT(1) | BIT(2),
+	},
+	[it8689] = {
+		.name = "it8689",
+		.model = "IT8689E",
 		.features = FEAT_NEWER_AUTOPWM | FEAT_12MV_ADC | FEAT_16BIT_FANS
 		  | FEAT_SIX_FANS | FEAT_NEW_TEMPMAP
 		  | FEAT_IN7_INTERNAL | FEAT_SIX_PWM | FEAT_PWM_FREQ2
@@ -3114,6 +3127,7 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 		sio_data->type = it8665;
 		break;
 	case IT8686E_DEVID:
+	case IT8689E_DEVID:
 		sio_data->type = it8686;
 		break;
 	case 0xffff:	/* No device at all */
