@@ -745,7 +745,7 @@ static const struct it87_devices it87_devices[] = {
 		.num_temp_limit = 6,
 		.num_temp_offset = 6,
 		.num_temp_map = 7,
-		.smbus_bitmap = BIT(1) | BIT(2),
+		.smbus_bitmap = BIT(1) | BIT(2) | BIT(3),
 	},
 };
 
