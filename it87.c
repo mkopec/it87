@@ -88,7 +88,7 @@ enum chips { it87, it8712, it8716, it8718, it8720, it8721, it8728, it8732,
 	     it8736, it8738,
 	     it8771, it8772, it8781, it8782, it8783, it8786, it8790,
 	     it8792, it8603, it8606, it8607, it8613, it8620, it8622, it8625,
-	     it8628, it8655, it8665, it8686, it8689 };
+	     it8628, it8655, it8665, it8686, it8689, it8695 };
 
 static unsigned short force_id;
 module_param(force_id, ushort, 0000);
@@ -205,6 +205,7 @@ static inline void superio_exit(int ioreg, bool doexit)
 #define IT8665E_DEVID 0x8665
 #define IT8686E_DEVID 0x8686
 #define IT8689E_DEVID 0x8689
+#define IT8695E_DEVID 0x8695
 
 /* Logical device 4 (Environmental Monitor) registers */
 #define IT87_ACT_REG		0x30
@@ -745,7 +746,18 @@ static const struct it87_devices it87_devices[] = {
 		.num_temp_limit = 6,
 		.num_temp_offset = 6,
 		.num_temp_map = 7,
-		.smbus_bitmap = BIT(1) | BIT(2) | BIT(3),
+		.smbus_bitmap = BIT(1) | BIT(2),
+	},
+	[it8695] = {
+		.name = "it8695",
+		.model = "IT8695E",
+		.features = FEAT_NEWER_AUTOPWM | FEAT_10_9MV_ADC | FEAT_SCALING
+			| FEAT_16BIT_FANS | FEAT_TEMP_PECI
+			| FEAT_IN7_INTERNAL | FEAT_PWM_FREQ2 | FEAT_FANCTL_ONOFF,
+		.num_temp_limit = 3,
+		.num_temp_offset = 3,
+		.num_temp_map = 3,
+		.peci_mask = 0x07,
 	},
 };
 
@@ -3128,6 +3140,7 @@ static int __init it87_find(int sioaddr, unsigned short *address,
 		break;
 	case IT8686E_DEVID:
 	case IT8689E_DEVID:
+	case IT8695E_DEVID:
 		sio_data->type = it8686;
 		break;
 	case 0xffff:	/* No device at all */
